@@ -2,10 +2,18 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 // Every cpp code done in CPU
+// 
 // OpenGL operates like state machine
+// 
 // Vertex Buffer
 // Blob of memory to push bytes , in GPU VRAM
 // Vertex Buffer -> Drawcall(CPU)(Read from GPU VRAM Draw to screen) -> Tell GPU To draw (SHADER)
+// 
+// Vertex Attributes is an input variable to a shader that is supplied with per-vertex data. 
+// In OpenGL core profile, they are specified as in variables in a vertex shader and are backed by a GL_ARRAY_BUFFER. 
+// These variable can contain, for example, positions, normals or texture coordinates.
+// A vertex is the combination of all the vertex attributes that belong together
+
 int main(void)
 {
 	GLFWwindow* window;
@@ -44,6 +52,11 @@ int main(void)
 	glGenBuffers(1, &buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
 	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float),position,GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		/* Loop until the user closes the window */
 		while (!glfwWindowShouldClose(window))
