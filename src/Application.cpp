@@ -87,17 +87,20 @@ int main(void)
 
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
-	float position[6] = {
-		-0.5f, -0.5f,
-		0.0f, 0.5f,
-		0.5f, -0.5f
+	float position[12] = {
+		-0.2f, -0.2f,
+		0.0f, 0.2f,
+		0.2f, -0.2f,
+		0.2f,-0.2f,
+		0.4f,0.2,
+		0.6,-0.2f
 	};
 
 	// Define Vertex Buffer
 	unsigned int buffer;
 	glGenBuffers(1, &buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
-	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), position, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), position, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
@@ -135,7 +138,7 @@ int main(void)
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// Draw without index buffer
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 		// Draw with index buffer
 
 
