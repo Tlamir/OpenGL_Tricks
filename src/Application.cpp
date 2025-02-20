@@ -5,8 +5,7 @@
 #include <string>
 #include <sstream>
 
-
-// Every cpp code done in CPU
+// Every cpp code runs in CPU
 // 
 // OpenGL operates like state machine
 // 
@@ -21,6 +20,9 @@
 // 
 // Vertex shader called by each vertecies. (3 in Triangle)
 // Fragment shader called by each pixels and colors. (too many times)
+//
+// All buffers should be unsingned integers
+// 
 
 struct ShaderProgramSource
 {
@@ -134,25 +136,36 @@ int main(void)
 
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
-	float position[12] = {
-		-0.2f, -0.2f,
-		0.0f, 0.2f,
-		0.2f, -0.2f,
-		0.2f,-0.2f,
-		0.4f,0.2,
-		0.6,-0.2f
+	float position[] = {
+		-0.5,-0.5f,
+		0.5f,-0.5f,
+		0.5f,0.5f,
+		-0.5f,0.5f
+	};
+
+	// Index buffer
+
+	unsigned int indecies[]{
+		0,1,2,
+		2,3,0
 	};
 
 	// Define Vertex Buffer
 	unsigned int buffer;
 	glGenBuffers(1, &buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
-	glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), position, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 6*2 * sizeof(float), position, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 
 	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// Define Index Buffer
+	unsigned int ibo;
+	glGenBuffers(1, &ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6*sizeof(unsigned int), indecies, GL_STATIC_DRAW);
 
 	ShaderProgramSource source = ParseShader("res/shaders/Shader.shader");
 	std::cout << source.VertexSource << std::endl;
@@ -166,11 +179,9 @@ int main(void)
 	{
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
-
-		// Draw without index buffer
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		
 		// Draw with index buffer
-
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
