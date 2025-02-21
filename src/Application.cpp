@@ -30,6 +30,11 @@
 // All buffers should be unsingned integers
 // 
 // Debug break at OpenGL with asserts
+// 
+// Uniform move data from c++ to gpu
+// Uniforms are set per draw
+// Attributes are set per vertex
+
 
 static void GLClearError()
 {
@@ -40,7 +45,7 @@ static bool GLLogCall(const char* function, const char* file, int line)
 {
 	while (GLenum error = glGetError())
 	{
-		std::cout << "[OpenGL Error] ( " << error << " ):" <<function<< " " << file<< ":"<<line << std::endl;
+		std::cout << "[OpenGL Error] ( " << error << " ):" << function << " " << file << ":" << line << std::endl;
 		return false;
 	}
 	return true;
@@ -150,6 +155,8 @@ int main(void)
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
 
+	glfwSwapInterval(2);
+
 	// Call glew after we have valid openGL context
 	if (glewInit() != GLEW_OK)
 	{
@@ -196,14 +203,31 @@ int main(void)
 	unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
 	GLCall(glUseProgram(shader));
 
+	int location = glGetUniformLocation(shader, "u_Color");
+	ASSERT(location != -1);
+	GLCall(glUniform4f(location, 0.2f, 0.3f, 0.2f, 1.0f));
+
+	float r = 0.0f;
+	float increment = 0.05f;
+
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
 		/* Render here */
 		GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
+		GLCall(glUniform4f(location, r, 0.3f, 0.2f, 1.0f));
+
 		// Draw with index buffer
 		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+
+		if (r > 1.0f)
+			increment = -0.05f;
+		else if (r < 0.0f)
+			increment = 0.05f;
+
+		r += increment;
+
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
