@@ -34,6 +34,8 @@
 // Uniform move data from c++ to gpu
 // Uniforms are set per draw
 // Attributes are set per vertex
+//
+// Vertex Arrays
 
 
 static void GLClearError()
@@ -183,7 +185,7 @@ int main(void)
 	unsigned int buffer;
 	GLCall(glGenBuffers(1, &buffer));
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, buffer));
-	GLCall(glBufferData(GL_ARRAY_BUFFER, 6 * 2 * sizeof(float), position, GL_STATIC_DRAW));
+	GLCall(glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), position, GL_STATIC_DRAW));
 
 	GLCall(glEnableVertexAttribArray(0));
 	GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
@@ -207,6 +209,11 @@ int main(void)
 	ASSERT(location != -1);
 	GLCall(glUniform4f(location, 0.2f, 0.3f, 0.2f, 1.0f));
 
+	GLCall(glUseProgram(0));
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+
+
 	float r = 0.0f;
 	float increment = 0.05f;
 
@@ -216,7 +223,13 @@ int main(void)
 		/* Render here */
 		GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
+		GLCall(glUseProgram(shader));
 		GLCall(glUniform4f(location, r, 0.3f, 0.2f, 1.0f));
+		GLCall(glBindBuffer(GL_ARRAY_BUFFER, buffer));
+		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
+
+		GLCall(glEnableVertexAttribArray(0));
+		GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
 
 		// Draw with index buffer
 		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
