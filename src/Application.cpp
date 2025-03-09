@@ -8,6 +8,7 @@
 #include"Renderer.hpp"
 
 #include "VertexBuffer.hpp"
+#include "VertexBufferLayout.hpp"
 #include "IndexBuffer.hpp"
 #include "VertexArray.hpp"
 #include "Shader.hpp"
@@ -102,7 +103,7 @@ int main(void)
 
 		VertexBufferLayout layout;
 		layout.Push<float>(2);
-		va.Addbuffer(vb,layout);
+		va.Addbuffer(vb, layout);
 
 
 		// Define Index Buffer
@@ -117,9 +118,11 @@ int main(void)
 
 		// UNBIND Everything
 		va.Unbind();
-		shader.UnBind();
 		vb.Unbind();
 		ib.Unbind();
+		shader.UnBind();
+
+		Renderer renderer;
 
 		float r = 0.0f;
 		float increment = 0.05f;
@@ -128,20 +131,14 @@ int main(void)
 		while (!glfwWindowShouldClose(window))
 		{
 			/* Render here */
-			GLCall(glClear(GL_COLOR_BUFFER_BIT));
+			renderer.Clear();
 
 			// Bind Shader
 			shader.Bind();
 			shader.SetUniform4f("u_Color", r, 0.3f, 0.2f, 1.0f);
 
-			// Bind vertex array vao
-			va.Bind();
-
-			// BIND index buffer
-			ib.Bind();
-
-			// Draw with index buffer
-			GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+			// Draw Call
+			renderer.Draw(va, ib, shader);
 
 			// Color RED value change (r,g,b)
 			if (r > 1.0f)
