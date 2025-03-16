@@ -161,6 +161,9 @@
     <ClInclude Include="src\VertexBufferLayout.hpp" />
     <ClInclude Include="Vendor\stb_image\stb_image.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\textures\logo.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
