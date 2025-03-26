@@ -42,6 +42,5 @@ This project is intended for educational purposes to learn graphics programming 
 
 ## Notes
 
-- This is a learning project, not intended for production use
 - The code includes helpful comments explaining key OpenGL concepts
 - The project uses modern OpenGL (Core Profile) rather than legacy OpenGL
